@@ -40,7 +40,7 @@ jobs:
           # 以下命令二选一/按需修改：
           # hexo clean && hexo generate # Hexo 构建命令
           # hugo --minify               # Hugo 构建命令
-          npm run build # VitePress/VuePress 构建命令
+          npm run docs:build # VitePress/VuePress 构建命令
 
       # 步骤5：部署到 GitHub Pages
       - name: Deploy to GitHub Pages
