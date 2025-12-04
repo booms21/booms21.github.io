@@ -1,0 +1,57 @@
+# 工作流名称
+name: Auto Deploy GitHub.io Blog
+
+# 触发条件：向 source 分支推送代码时触发（若你的源码分支是 main，改成 main）
+on:
+  push:
+    branches:
+      - main
+
+# 工作流任务
+jobs:
+  deploy:
+    # 运行环境：最新版 Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      # 步骤1：拉取仓库代码到运行环境
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # 拉取所有历史提交（部分主题需要）
+          fetch-depth: 0
+
+      # 步骤2：设置 Node.js 环境（根据你的博客框架调整版本，比如 18.x/20.x）
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          # 缓存 npm 依赖，加速后续构建
+          cache: 'npm'
+
+      # 步骤3：安装依赖（Hexo/Hugo/VitePress 通用，按需调整）
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install -g vitepress
+
+      # 步骤4：构建静态文件（核心步骤，根据博客框架调整命令）
+      - name: Build static files
+        run:
+          # 以下命令二选一/按需修改：
+          # hexo clean && hexo generate # Hexo 构建命令
+          # hugo --minify               # Hugo 构建命令
+          npm run build # VitePress/VuePress 构建命令
+
+      # 步骤5：部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          # 使用之前配置的 Secret 中的 PAT
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          # 构建后的静态文件目录（根据框架调整）：
+          # Hexo: public；Hugo: public；VitePress: docs/.vitepress/dist；VuePress: docs/.vuepress/dist
+          publish_dir: ./docs/.vitepress/dist
+          # 部署到 gh-pages 分支（GitHub Pages 默认读取该分支）
+          publish_branch: main
+          # 部署时保留 CNAME 文件（自定义域名用）
+          keep_files: true
