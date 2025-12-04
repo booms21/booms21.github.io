@@ -52,6 +52,6 @@ jobs:
           # Hexo: public；Hugo: public；VitePress: docs/.vitepress/dist；VuePress: docs/.vuepress/dist
           publish_dir: ./docs/.vitepress/dist
           # 部署到 gh-pages 分支（GitHub Pages 默认读取该分支）
-          publish_branch: main
+          publish_branch: dist
           # 部署时保留 CNAME 文件（自定义域名用）
           keep_files: true
