@@ -3,22 +3,28 @@
 layout: home
 
 hero:
-  name: 'dayublog huawei精英'
-  text: 'dayu的部落格你号鱼'
-  tagline: 信息安全警告！每人v50
+  name: '子龙的临时文档站'
+  ### Title <Badge type="danger" text="caution" />
+  text: 'ジーロンの一時的なドキュメントサイト'
+  tagline: 不是blog，不科学冲浪这个不稳定
   actions:
     - theme: brand
-      text: cancan need代码
-      link: /markdown-examples
+      text: 我要打赏一下子龙giegie 😛
+      link: /das
     - theme: alt
-      text: 接口文档在这里你不会看啊
+      text: 热辣鲜香🌶
+      link: /api-examples
+    - theme: alt
+      text: 库的说明
       link: /api-examples
 
 features:
-  - title: 梁朝伟
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: OD到底怎么样
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: 秀才人呢
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: to-zip-webpack-plugin
+    details: 这是一个webpack插件，用于将打包后的文件压缩为zip文件
+  - title: time-formatter-js
+    details: 这是一个时间格式化库，用于将时间戳转换为指定格式的时间字符串
+  - title: inject-filter-js
+    details: 这是一个xss防注入的小js库，有点小，但是够用了
+  - title: ezzMock
+    details: 这是一个用通义ai程序员简单的mock库，用于在前端项目中模拟各种乱七八糟的数据
 ---
