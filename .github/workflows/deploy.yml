@@ -43,15 +43,36 @@ jobs:
           npm run docs:build # VitePress/VuePress 构建命令
 
       # 步骤5：部署到 GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          # 使用之前配置的 Secret 中的 PAT
-          github_token: ${{ secrets.ACCESS_TOKEN }}
-          # 构建后的静态文件目录（根据框架调整）：
-          # Hexo: public；Hugo: public；VitePress: docs/.vitepress/dist；VuePress: docs/.vuepress/dist
-          publish_dir: ./docs/.vitepress/dist
-          # 部署到 gh-pages 分支（GitHub Pages 默认读取该分支）
-          publish_branch: dist
-          # 部署时保留 CNAME 文件（自定义域名用）
-          keep_files: true
+      # - name: Deploy to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@v4
+      #   with:
+      #     # 使用之前配置的 Secret 中的 PAT
+      #     github_token: ${{ secrets.ACCESS_TOKEN }}
+      #     # 构建后的静态文件目录（根据框架调整）：
+      #     # Hexo: public；Hugo: public；VitePress: docs/.vitepress/dist；VuePress: docs/.vuepress/dist
+      #     publish_dir: ./docs/.vitepress/dist
+      #     # 部署到 gh-pages 分支（GitHub Pages 默认读取该分支）
+      #     publish_branch: dist
+      #     # 部署时保留 CNAME 文件（自定义域名用）
+      #     keep_files: true
+      - name: Deploy with token
+        env:
+                # 注入 Token 到环境变量
+          DEPLOY_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+                # 配置仓库信息（无需修改，自动适配）
+          REPO: github.com/booms21/booms21.github.io.git
+          BRANCH: dist  # 若你要推 dist 分支，改为 dist
+        run: |
+                # 基础配置（必须）
+          git config --global user.name "booms21"
+          git config --global user.email "949487862@qq.com"  # 替换为你的邮箱
+
+                # 进入构建目录（按你的框架调整：Hexo=public，VitePress=docs/.vitepress/dist）
+          cd ./docs/.vitepress/dist
+
+                # 初始化并推送
+          git init
+          git add -A
+          git commit -m "Auto deploy: ${{ github.event.head_commit.message }}"
+                # 关键：用 Token 拼接 URL，传递权限
+          git push -f https://booms21:${DEPLOY_TOKEN}@${REPO} master:${BRANCH}
