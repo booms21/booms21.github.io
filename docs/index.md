@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: 'dayublog huawei精英'
-  text: '村上春树华为群主请帖'
+  text: 'dayu的部落格你号鱼'
   tagline: 信息安全警告！每人v50
   actions:
     - theme: brand
