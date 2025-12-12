@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import Phaser from 'phaser';
 
 const gameContainer = ref<HTMLDivElement | null>(null);
 let game: any = null;
@@ -22,38 +23,10 @@ function debugLog(message: string) {
 onMounted(() => {
   debugLog('onMounted 开始执行');
 
-  // 检查Phaser是否已经可用（通过VitePress配置预先加载）
-  const Phaser = (window as any).Phaser;
-
-  if (Phaser) {
-    alert('Phaser已可用！版本: ' + Phaser.VERSION);
-    debugLog('Phaser已可用！版本: ' + Phaser.VERSION);
-    initGame();
-  } else {
-    alert('Phaser不可用！');
-    debugLog('Phaser不可用！');
-
-    // 如果Phaser不可用，尝试动态加载
-    debugLog('尝试动态加载Phaser脚本');
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/phaser@3.86.0/dist/phaser.js';
-
-    script.onload = function () {
-      const Phaser = (window as any).Phaser;
-      if (Phaser) {
-        alert('Phaser动态加载成功！版本: ' + Phaser.VERSION);
-        debugLog('Phaser动态加载成功！版本: ' + Phaser.VERSION);
-        initGame();
-      }
-    };
-
-    script.onerror = function () {
-      alert('Phaser动态加载失败！');
-      debugLog('Phaser动态加载失败！');
-    };
-
-    document.head.appendChild(script);
-  }
+  // 使用直接导入的Phaser初始化游戏
+  alert('Phaser已可用！版本: ' + Phaser.VERSION);
+  debugLog('Phaser已可用！版本: ' + Phaser.VERSION);
+  initGame();
 });
 
 function initGame() {
@@ -64,12 +37,6 @@ function initGame() {
     return;
   }
 
-  if (typeof (window as any).Phaser === 'undefined') {
-    debugLog('Phaser对象未定义');
-    return;
-  }
-
-  const Phaser = (window as any).Phaser;
   debugLog(`Phaser版本: ${Phaser.VERSION}`);
 
   try {
