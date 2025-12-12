@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import Phaser from 'phaser';
 
 const gameContainer = ref<HTMLDivElement | null>(null);
 let game: any = null;
+let Phaser: any = null;
 
 // 添加一个简单的调试函数
 function debugLog(message: string) {
@@ -20,20 +20,26 @@ function debugLog(message: string) {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   debugLog('onMounted 开始执行');
 
-  // 使用直接导入的Phaser初始化游戏
-  alert('Phaser已可用！版本: ' + Phaser.VERSION);
-  debugLog('Phaser已可用！版本: ' + Phaser.VERSION);
-  initGame();
+  // 动态导入Phaser，确保在客户端环境中执行
+  if (typeof window !== 'undefined') {
+    Phaser = await import('phaser').then((module) => module.default || module);
+
+    alert('Phaser已可用！版本: ' + Phaser.VERSION);
+    debugLog('Phaser已可用！版本: ' + Phaser.VERSION);
+    initGame();
+  } else {
+    debugLog('Phaser只能在客户端环境中运行');
+  }
 });
 
 function initGame() {
   debugLog('开始初始化游戏');
 
-  if (!gameContainer.value) {
-    debugLog('游戏容器不存在');
+  if (!gameContainer.value || !Phaser) {
+    debugLog('游戏容器或Phaser不存在');
     return;
   }
 
@@ -360,8 +366,10 @@ function create() {
         restartButton.on(
           'pointerdown',
           function () {
-            // 重新加载页面
-            window.location.reload();
+            // 重新加载页面 - 确保在客户端环境中执行
+            if (typeof window !== 'undefined') {
+              window.location.reload();
+            }
           },
           this
         );
