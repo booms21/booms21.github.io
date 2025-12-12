@@ -5,6 +5,15 @@ export default defineConfig({
   metaChunk: true,
   title: 'DAYU 探案社😛',
   description: 'DAYU探偵社です',
+  
+  // 在head中直接添加Phaser脚本
+  head: [
+    ['script', {
+      src: 'https://cdn.jsdelivr.net/npm/phaser@3.86.0/dist/phaser.js',
+      async: false // 同步加载，确保在Vue组件执行前可用
+    }]
+  ],
+  
   themeConfig: {
     search: {
       provider: 'local',

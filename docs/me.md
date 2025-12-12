@@ -1,5 +1,5 @@
 <script setup>
-import Foo from './Foo.vue'
+import Game from './Game.vue'
 </script>
 
 # 为啥叫 dayu
@@ -15,3 +15,5 @@ import Foo from './Foo.vue'
 旅游（这个最近不咋想去了
 
 🛰vx eh4000
+
+<Game />
