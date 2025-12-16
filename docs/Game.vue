@@ -27,7 +27,6 @@ onMounted(async () => {
   if (typeof window !== 'undefined') {
     Phaser = await import('phaser').then((module) => module.default || module);
 
-    alert('Phaser已可用！版本: ' + Phaser.VERSION);
     debugLog('Phaser已可用！版本: ' + Phaser.VERSION);
     initGame();
   } else {
@@ -60,7 +59,7 @@ function initGame() {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 200 },
+          gravity: { x: 100 },
         },
       },
     };
@@ -77,12 +76,13 @@ function preload() {
   debugLog('preload函数被调用');
   // 预加载资源
   this.load.image('sky', 'https://labs.phaser.io/assets/skies/space3.png');
-  this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
+  this.load.image('player', 'https://labs.phaser.io/assets/sprites/xenon2_ship.png');
   this.load.image('bullet', 'https://labs.phaser.io/assets/sprites/bullet.png');
   // 加载三种怪物图片
-  this.load.image('monster1', 'https://labs.phaser.io/assets/sprites/alien.png');
+  this.load.image('monster1', 'https://labs.phaser.io/assets/sprites/master.png');
   this.load.image('monster2', 'https://labs.phaser.io/assets/sprites/ufo.png');
   this.load.image('monster3', 'https://labs.phaser.io/assets/sprites/space-baddie.png');
+  this.load.image('monster4', 'https://labs.phaser.io/assets/sprites/wasp.png');
 }
 
 function create() {
@@ -95,11 +95,19 @@ function create() {
   // 存储背景引用
   this.backgrounds = [bg1];
 
+  // 不预先创建粒子系统，在碰撞时直接创建
+
   debugLog('背景创建完成，使用tileSprite实现无缝滚动');
 
   // 创建玩家（小人）
   const player = this.physics.add.image(400, 500, 'player');
   player.setCollideWorldBounds(true);
+  this.anims.create({
+    key: 'left',
+    frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }),
+    frameRate: 10,
+    repeat: 5,
+  });
 
   // 创建鼠标指针
   this.input.on(
@@ -204,7 +212,7 @@ function create() {
   });
 
   // 定义怪物类型
-  const monsterTypes = ['monster1', 'monster2', 'monster3'];
+  const monsterTypes = ['monster1', 'monster2', 'monster3', 'monster4'];
 
   // 生成怪物的函数
   function spawnMonster() {
@@ -236,10 +244,10 @@ function create() {
     // 创建怪物
     const monster = monsters.create(x, y, monsterType);
     monster.setCollideWorldBounds(false);
-    monster.setBounce(0.7);
+    monster.setBounce(0.9);
 
     // 随机调整怪物大小（1-3倍）
-    const scale = Math.random() * (3 - 1) + 1;
+    const scale = Math.random() * (2 - 1) + 1;
     monster.setScale(scale);
 
     // 计算朝向玩家的方向
@@ -286,6 +294,43 @@ function create() {
     bullets,
     monsters,
     function (bullet, monster) {
+      // 播放爆炸效果 - 使用Sprite和Tween模拟爆炸（不依赖粒子系统API）
+      const explosionCount = 25; // 爆炸粒子数量
+
+      for (let i = 0; i < explosionCount; i++) {
+        // 创建单个爆炸粒子（使用bullet纹理）
+        const particle = this.add.sprite(monster.x, monster.y, 'bullet');
+
+        // 设置初始属性
+        particle.setScale(0.3);
+        particle.setAlpha(1);
+        particle.setBlendMode(Phaser.BlendModes.ADD);
+
+        // 随机角度和速度
+        const angle = Math.random() * 360;
+        const speed = 100 + Math.random() * 200;
+
+        // 计算移动距离
+        const distance = 50 + Math.random() * 100;
+        const targetX = monster.x + Math.cos((angle * Math.PI) / 180) * distance;
+        const targetY = monster.y + Math.sin((angle * Math.PI) / 180) * distance;
+
+        // 创建tween动画
+        this.tweens.add({
+          targets: particle,
+          x: targetX,
+          y: targetY,
+          scale: 3,
+          alpha: 0,
+          duration: 800,
+          ease: 'Power2.easeOut',
+          onComplete: () => {
+            // 动画结束后销毁粒子
+            particle.destroy();
+          },
+        });
+      }
+
       // 子弹消失
       bullets.killAndHide(bullet);
       bullet.setActive(false);
@@ -398,9 +443,9 @@ function update() {
     <div ref="gameContainer" class="game-canvas"></div>
 
     <!-- 调试信息区域 -->
-    <div id="debug-info" class="debug-info">
+    <!-- <div id="debug-info" class="debug-info">
       <h3>调试信息： (文明游戏 请勿骂人)</h3>
-    </div>
+    </div> -->
   </div>
 </template>
 

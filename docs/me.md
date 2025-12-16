@@ -1,7 +1,3 @@
-<script setup>
-import Game from './Game.vue'
-</script>
-
 # 为啥叫 dayu
 
 就是 “大鱼” ，来自周深的歌曲 - 大鱼 （大鱼海棠
@@ -15,5 +11,3 @@ import Game from './Game.vue'
 旅游（这个最近不咋想去了
 
 🛰vx eh4000
-
-<Game />

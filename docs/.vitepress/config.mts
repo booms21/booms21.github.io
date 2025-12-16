@@ -35,6 +35,8 @@ export default defineConfig({
           { text: '瞅一眼我的 b 站', link: '/bili' },
           { text: '瞅一眼我的网易云音乐', link: '/wangyi' },
           { text: '关于我 dayu', link: '/me' },
+          { text: '30杀', link: '/game1' },
+          { text: '地牢', link: '/game2' },
         ],
       },
     ],
